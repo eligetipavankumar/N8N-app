@@ -2,8 +2,9 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB = credentials('docker-cred')   // Jenkins credentials ID
+        DOCKERHUB = credentials('docker-cred')    // DockerHub creds ID
         DOCKER_IMAGE = "mekumar/n8n"
+        KUBECONFIG = 'E:\\jenkins\\kube\\config'  // kubeconfig path
     }
 
     stages {
@@ -15,17 +16,19 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    bat "docker build -t %DOCKER_IMAGE%:build-%BUILD_NUMBER% ."
-                }
+                bat """
+                    docker build -t %DOCKER_IMAGE%:build-%BUILD_NUMBER% .
+                """
             }
         }
 
         stage('Push Docker Image') {
             steps {
-                script {
-                    bat "echo %DOCKERHUB_PSW% | docker login -u %DOCKERHUB_USR% --password-stdin"
-                    bat "docker push %DOCKER_IMAGE%:build-%BUILD_NUMBER%"
+                withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    bat """
+                        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                        docker push %DOCKER_IMAGE%:build-%BUILD_NUMBER%
+                    """
                 }
             }
         }
@@ -33,14 +36,11 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    def updateCmd = "kubectl set image deployment/n8n-deployment n8n=%DOCKER_IMAGE%:build-%BUILD_NUMBER% -n default"
-                    def applyCmd  = "kubectl apply -f k8s/"
-
                     try {
-                        bat "${updateCmd}"
+                        bat "kubectl set image deployment/n8n-deployment n8n=%DOCKER_IMAGE%:build-%BUILD_NUMBER% -n default"
                     } catch (err) {
                         echo "Deployment not found, applying manifests instead..."
-                        bat "${applyCmd}"
+                        bat "kubectl apply -f k8s/ --validate=false"
                     }
                 }
             }
