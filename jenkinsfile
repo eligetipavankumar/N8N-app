@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/Vinod-09/n8n.git'
+                git branch: 'main', url: 'https://github.com/Vinod-09/N8N-app.git'
             }
         }
 
