@@ -33,7 +33,6 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    // Try rolling update first
                     def updateCmd = "kubectl set image deployment/n8n-deployment n8n=%DOCKER_IMAGE%:build-%BUILD_NUMBER% -n default"
                     def applyCmd  = "kubectl apply -f k8s/"
 
