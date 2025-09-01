@@ -41,8 +41,8 @@ pipeline {
                         echo "Before update:"
                         cat ${MANIFEST_PATH}
 
-                        # Replace Docker image tag dynamically (fixed for indentation)
-                        sed -i "s|^\(\s*image: .*/mekumar/n8n:\).*|\1${IMAGE_TAG}|g" ${MANIFEST_PATH}
+                        # Replace Docker image tag dynamically
+                        sed -i "s|image: .*/mekumar/n8n:.*|image: ${DOCKER_IMAGE}:${IMAGE_TAG}|g" ${MANIFEST_PATH}
 
                         echo "After update:"
                         cat ${MANIFEST_PATH}
@@ -61,5 +61,3 @@ pipeline {
         }
     }
 }
-
-
