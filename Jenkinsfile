@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         IMAGE_TAG = "${BUILD_NUMBER}"
-        DOCKER_IMAGE = "mekumar/n8n:${BUILD_NUMBER}"
+        DOCKER_IMAGE = "mekumar/n8n"
         GIT_REPO = 'https://github.com/Vinod-09/N8N-app.git'
         MANIFEST_PATH = "dev/deployment.yaml"
     }
