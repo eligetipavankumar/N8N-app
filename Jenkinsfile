@@ -2,72 +2,58 @@ pipeline {
     agent any
 
     environment {
-        // Use kubeconfig for kubectl
-        KUBECONFIG = "E:\\jenkins\\kube\\configure\\config"
-        DOCKER_IMAGE = "mekumar/n8n"
+        IMAGE_TAG = "${BUILD_NUMBER}"
+	DOCKER_IMAGE = "mekumar/n8n"
+        GIT_REPO = 'https://github.com/Vinod-09/N8N-app.git'
+        MANIFEST_PATH = "dev/deployment.yaml"
     }
 
     stages {
-        stage('Checkout') {
+
+        stage('Docker Build') {
+            steps {
+                sh "docker build -t %DOCKER_IMAGE%:build-%BUILD_NUMBER% ."
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                withCredentials([string(credentialsId: 'docker-pat', variable: 'hubPwd')]) {
+                    sh "echo ${hubPwd} | docker login -u mekumar --password-stdin"
+                    sh "docker push mekumar/n8n:$BUILD_NUMBER"
+                }
+            }
+        }
+
+        stage('Checkout K8S manifest SCM') {
             steps {
                 git branch: 'main', url: 'https://github.com/Vinod-09/N8N-app.git'
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Update K8S manifest & push to Repo') {
             steps {
                 script {
-                    bat """
-                    echo ===== Building Docker Image =====
-                    docker build -t %DOCKER_IMAGE%:build-%BUILD_NUMBER% .
-                    """
-                }
-            }
-        }
+                    withCredentials([usernamePassword(credentialsId: 'Git-pat', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                        sh '''
+                        echo "Before update:"
+                        cat ${MANIFEST_PATH}
 
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        bat """
-                        echo ===== Logging into DockerHub =====
-                        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
-                        docker push %DOCKER_IMAGE%:build-%BUILD_NUMBER%
-                        """
+                        # Replace version/tag dynamically
+                         sed -i "s|image: .*/mekumar/n8n:.*|image: ${DOCKER_IMAGE}|g" ${MANIFEST_PATH}
+
+                        echo "After update:"
+                        cat ${MANIFEST_PATH}
+
+                        git config user.email "pvk83360@gmail.com"
+                        git config user.name "Vinod-09"
+
+                        git add ${MANIFEST_PATH}
+                        git commit -m "Updated deploy yaml to build ${BUILD_NUMBER} | Jenkins Pipeline" || echo "No changes to commit"
+
+                        git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Vinod-09/n8n-argoCD.git main
+                        '''
                     }
-                }
-            }
-        }
-
-        stage('Deploy to Kubernetes') {
-            steps {
-                script {
-                    echo "===== Deploying to Kubernetes ====="
-
-                    // Try rolling update first
-                    def status = bat(script: "kubectl set image deployment/n8n-deployment n8n=%DOCKER_IMAGE%:build-%BUILD_NUMBER% -n default", returnStatus: true)
-
-                    if (status != 0) {
-                        echo "Deployment not found, applying manifests instead..."
-                        bat """
-                        kubectl apply -f k8s/deployment.yaml
-                        kubectl apply -f k8s/service.yaml
-                        kubectl apply -f k8s/ingress.yaml
-                        """
-                    }
-                }
-            }
-        }
-
-        stage('Verify Deployment') {
-            steps {
-                script {
-                    bat """
-                    echo ===== Verifying Pods =====
-                    kubectl get pods -n default
-                    kubectl get svc -n default
-                    kubectl get ingress -n default
-                    """
                 }
             }
         }
