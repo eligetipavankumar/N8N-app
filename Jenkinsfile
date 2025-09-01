@@ -34,7 +34,7 @@ pipeline {
         stage('Update K8S manifest & push to Repo') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'Git-pat', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                    withCredentials([usernamePassword(credentialsId: 'Git-pat', variable: 'GITHUB_TOKEN')]) {
                         sh '''
                         echo "Before update:"
                         cat ${MANIFEST_PATH}
@@ -51,7 +51,7 @@ pipeline {
                         git add ${MANIFEST_PATH}
                         git commit -m "Updated deploy yaml to build ${BUILD_NUMBER} | Jenkins Pipeline" || echo "No changes to commit"
 
-                        git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Vinod-09/n8n-argoCD.git main
+                        git push https://$GITHUB_TOKEN@github.com/Vinod-09/n8n-argoCD.git main
                         '''
                     }
                 }
