@@ -42,7 +42,7 @@ pipeline {
                         cat ${MANIFEST_PATH}
 
                         # Replace Docker image tag dynamically
-                        sed -i "s|image: .*/mekumar/n8n:.*|image: ${DOCKER_IMAGE}:${IMAGE_TAG}|g" ${MANIFEST_PATH}
+                        sed -i "s|image: .*/mekumar/n8n:*|image: ${DOCKER_IMAGE}:${IMAGE_TAG}|g" ${MANIFEST_PATH}
 
                         echo "After update:"
                         cat ${MANIFEST_PATH}
