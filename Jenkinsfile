@@ -12,7 +12,7 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                sh "docker build -t %DOCKER_IMAGE%:build-%BUILD_NUMBER% ."
+                sh "docker build -t $DOCKER_IMAGE:build-$BUILD_NUMBER ."
             }
         }
 
