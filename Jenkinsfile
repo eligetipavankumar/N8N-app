@@ -27,7 +27,7 @@ pipeline {
 
         stage('Checkout K8S manifest SCM') {
             steps {
-                git branch: 'main', url: 'https://github.com/Vinod-09/N8N-app.git'
+                git branch: 'main', url: 'https://github.com/Vinod-09/n8n-argoCD.git'
             }
         }
 
