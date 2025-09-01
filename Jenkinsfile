@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         IMAGE_TAG = "${BUILD_NUMBER}"
-        DOCKER_IMAGE = "mekumar/n8n"
+        DOCKER_IMAGE = "mekumar/n8n:${BUILD_NUMBER}"
         GIT_REPO = 'https://github.com/Vinod-09/N8N-app.git'
         MANIFEST_PATH = "dev/deployment.yaml"
     }
@@ -42,7 +42,7 @@ pipeline {
                         cat ${MANIFEST_PATH}
 
                         # Replace Docker image tag dynamically
-                        sed -i "s|image: .*/mekumar/n8n:.*|image: ${DOCKER_IMAGE}:${IMAGE_TAG}|g" ${MANIFEST_PATH}
+                        sed -i "s|image: .*/mekumar/n8n:.*|image: ${DOCKER_IMAGE}|g" ${MANIFEST_PATH}
 
                         echo "After update:"
                         cat ${MANIFEST_PATH}
