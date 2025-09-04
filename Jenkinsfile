@@ -38,7 +38,7 @@ pipeline {
         stage('Update K8S manifest & push to Repo') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'Git-pat', variable: 'GITHUB_TOKEN')]) {
+                    withCredentials([string(credentialsId: 'GitHub', variable: 'GITHUB_TOKEN')]) {
                         bat """
                         echo Before update:
                         type "${MANIFEST_PATH}"
