@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: n8n
-          image: eligetipavankumar/n8n:16   # Jenkins will update this dynamically
+          image: eligetipavankumar/n8n:17
           ports:
             - containerPort: 5678
           env:
