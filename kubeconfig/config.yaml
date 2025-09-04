@@ -8,5 +8,5 @@ spec:
     spec:
       containers:
       - name: n8n
-        image: eligetipavankumar/n8n:OLD_TAG
+        image: eligetipavankumar/n8n:10
 
