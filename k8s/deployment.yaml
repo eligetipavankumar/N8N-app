@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: n8n
-          image: eligetipavankumar/n8n:18
+          image: eligetipavankumar/n8n:19
           ports:
             - containerPort: 5678
           env:
