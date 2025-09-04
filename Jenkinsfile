@@ -62,5 +62,11 @@ pipeline {
             }
         }
 
+        stage('Deploy to Minikube') {
+            steps {
+                bat "kubectl apply -f ${MANIFEST_PATH}"
+            }
+        }
+
     } // end of stages
 } // end of pipeline
