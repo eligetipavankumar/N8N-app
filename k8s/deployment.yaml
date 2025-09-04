@@ -33,4 +33,4 @@ spec:
             - name: GENERIC_TIMEZONE
               value: "UTC"
             - name: WEBHOOK_TUNNEL_URL
-              value: "http://$(minikube ip):30001"
+              value: "http://$192.168.49.2:30001"
