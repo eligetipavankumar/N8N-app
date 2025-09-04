@@ -5,7 +5,7 @@ pipeline {
         IMAGE_TAG = "${BUILD_NUMBER}"
         DOCKER_IMAGE = "eligetipavankumar/n8n:${BUILD_NUMBER}"
         GIT_REPO = 'https://github.com/eligetipavankumar/N8n-app.git'
-        MANIFEST_PATH = "${WORKSPACE}/kubeconfig/config.yaml"
+        K8S_FOLDER = "${WORKSPACE}/k8s"
     }
 
     stages {
@@ -35,25 +35,19 @@ pipeline {
             }
         }
 
-        stage('Update K8S manifest & push to Repo') {
+        stage('Update Deployment Image & Push to Repo') {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'GitHub', variable: 'GITHUB_TOKEN')]) {
                         bat """
-                        echo Before update:
-                        type "${MANIFEST_PATH}"
-
-                        REM Replace Docker image tag dynamically
-                        powershell -Command "(Get-Content '${MANIFEST_PATH}') -replace 'image: .*', 'image: ${DOCKER_IMAGE}' | Set-Content '${MANIFEST_PATH}'"
-
-                        echo After update:
-                        type "${MANIFEST_PATH}"
+                        REM Update Deployment image dynamically
+                        powershell -Command "(Get-Content '${K8S_FOLDER}/deployment.yaml') -replace 'image: .*', 'image: ${DOCKER_IMAGE}' | Set-Content '${K8S_FOLDER}/deployment.yaml'"
 
                         git config user.email "eligetipavan@gmail.com"
                         git config user.name "eligetipavankumar"
 
-                        git add "${MANIFEST_PATH}"
-                        git commit -m "Updated deploy yaml to build ${IMAGE_TAG} | Jenkins Pipeline" || echo No changes to commit
+                        git add "${K8S_FOLDER}/deployment.yaml"
+                        git commit -m "Updated deployment image to build ${IMAGE_TAG} | Jenkins Pipeline" || echo No changes to commit
 
                         git push https://${GITHUB_TOKEN}@github.com/eligetipavankumar/N8n-app.git main
                         """
@@ -64,7 +58,9 @@ pipeline {
 
         stage('Deploy to Minikube') {
             steps {
-                bat "kubectl apply -f ${MANIFEST_PATH}"
+                bat "kubectl apply -f ${K8S_FOLDER}/deployment.yaml"
+                bat "kubectl apply -f ${K8S_FOLDER}/service.yaml"
+                bat "kubectl apply -f ${K8S_FOLDER}/ingress.yaml"
             }
         }
 
