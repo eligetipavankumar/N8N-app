@@ -17,18 +17,17 @@ pipeline {
         }
 
         stage('Docker Push') {
-					steps {
-        withCredentials([usernamePassword(credentialsId: 'DOCKER_USER', 
-                                         usernameVariable: 'HUB_USER', 
-                                         passwordVariable: 'HUB_PWD')]) {
-            bat """
-            echo %HUB_PWD% | docker login -u %HUB_USER% --password-stdin
-            docker push ${DOCKER_IMAGE}
-            """
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'DOCKER_USER', 
+                                                 usernameVariable: 'HUB_USER', 
+                                                 passwordVariable: 'HUB_PWD')]) {
+                    bat """
+                    echo %HUB_PWD% | docker login -u %HUB_USER% --password-stdin
+                    docker push ${DOCKER_IMAGE}
+                    """
+                }
+            }
         }
-    }
-}
-
 
         stage('Checkout K8S manifest SCM') {
             steps {
@@ -62,5 +61,6 @@ pipeline {
                 }
             }
         }
-    }
-}
+
+    } // end of stages
+} // end of pipeline
