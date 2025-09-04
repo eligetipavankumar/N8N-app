@@ -5,8 +5,7 @@ pipeline {
         IMAGE_TAG = "${BUILD_NUMBER}"
         DOCKER_IMAGE = "eligetipavankumar/n8n:${BUILD_NUMBER}"
         GIT_REPO = 'https://github.com/eligetipavankumar/N8n-app.git'
-        MANIFEST_PATH = "${WORKSPACE}/kubeconfig"
-
+        MANIFEST_PATH = "${WORKSPACE}/kubeconfig/config.yaml"
     }
 
     stages {
@@ -45,7 +44,7 @@ pipeline {
                         type "${MANIFEST_PATH}"
 
                         REM Replace Docker image tag dynamically
-                        powershell -Command "(Get-Content '${MANIFEST_PATH}') -replace 'image: .*/n8n:.*', 'image: ${DOCKER_IMAGE}' | Set-Content '${MANIFEST_PATH}'"
+                        powershell -Command "(Get-Content '${MANIFEST_PATH}') -replace 'image: .*', 'image: ${DOCKER_IMAGE}' | Set-Content '${MANIFEST_PATH}'"
 
                         echo After update:
                         type "${MANIFEST_PATH}"
