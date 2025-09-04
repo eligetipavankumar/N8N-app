@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: n8n
-          image: eligetipavankumar/n8n
+          image: eligetipavankumar/n8n:16   # Jenkins will update this dynamically
           ports:
             - containerPort: 5678
           env:
@@ -32,3 +32,5 @@ spec:
               value: "admin123"
             - name: GENERIC_TIMEZONE
               value: "UTC"
+            - name: WEBHOOK_TUNNEL_URL
+              value: "http://$(minikube ip):30001"
