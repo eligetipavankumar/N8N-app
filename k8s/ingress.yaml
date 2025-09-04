@@ -15,4 +15,4 @@ spec:
               service:
                 name: n8n-service
                 port:
-                  number: 80
+                  number: 5678
