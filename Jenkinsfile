@@ -3,24 +3,24 @@ pipeline {
 
     environment {
         IMAGE_TAG = "${BUILD_NUMBER}"
-        DOCKER_IMAGE = "mekumar/n8n:{BUILD_NUMBER}"
-        GIT_REPO = 'https://github.com/Vinod-09/N8N-app.git'
-        MANIFEST_PATH = "dev/deployment.yaml"
+        DOCKER_IMAGE = "eligetipavankumar/n8n:{BUILD_NUMBER}"
+        GIT_REPO = 'https://github.com/eligetipavankumar/N8n-app.git'
+        MANIFEST_PATH = "C:/Program Files/Jenkins/kubeconfig"
     }
 
     stages {
 
         stage('Docker Build') {
             steps {
-                sh "docker build -t mekumar/n8n:${IMAGE_TAG} ."
+                sh "docker build -t eligetipavankumar/n8n:${IMAGE_TAG} ."
             }
         }
 
         stage('Docker Push') {
             steps {
-                withCredentials([string(credentialsId: 'docker-pat', variable: 'HUB_PWD')]) {
+                withCredentials([string(credentialsId: 'DOCKER_USER', variable: 'HUB_PWD')]) {
                     sh """
-                    echo ${HUB_PWD} | docker login -u mekumar --password-stdin
+                    echo ${HUB_PWD} | docker login -u eligetipavankumar --password-stdin
                     docker push ${DOCKER_IMAGE}:${IMAGE_TAG}
                     """
                 }
@@ -29,7 +29,7 @@ pipeline {
 
         stage('Checkout K8S manifest SCM') {
             steps {
-                git branch: 'main', url: 'https://github.com/Vinod-09/n8n-argoCD.git'
+                git branch: 'main', url: 'https://github.com/eligetipavankumar/N8n-app.git'
             }
         }
 
@@ -47,13 +47,13 @@ pipeline {
                         echo "After update:"
                         cat ${MANIFEST_PATH}
 
-                        git config user.email "pvk83360@gmail.com"
-                        git config user.name "Vinod-09"
+                        git config user.email "eligetipavan@gmail.com"
+                        git config user.name "eligetipavankumar"
 
                         git add ${MANIFEST_PATH}
                         git commit -m "Updated deploy yaml to build ${IMAGE_TAG} | Jenkins Pipeline" || echo "No changes to commit"
 
-                        git push https://${GITHUB_TOKEN}@github.com/Vinod-09/n8n-argoCD.git main
+                        git push https://${GITHUB_TOKEN}@github.com/eligetipavankumar/N8n-app.git main
                         """
                     }
                 }
