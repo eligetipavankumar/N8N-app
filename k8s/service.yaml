@@ -3,11 +3,11 @@ kind: Service
 metadata:
   name: n8n-service
 spec:
-  type: NodePort         
+  type: NodePort
   selector:
     app: n8n
   ports:
     - protocol: TCP
-      port: 5678          
-      targetPort: 5678   
-      nodePort: 30001      
+      port: 5678
+      targetPort: 5678
+      nodePort: 30001
