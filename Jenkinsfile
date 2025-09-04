@@ -5,7 +5,8 @@ pipeline {
         IMAGE_TAG = "${BUILD_NUMBER}"
         DOCKER_IMAGE = "eligetipavankumar/n8n:${BUILD_NUMBER}"
         GIT_REPO = 'https://github.com/eligetipavankumar/N8n-app.git'
-        MANIFEST_PATH = "C:/Program Files/Jenkins/kubeconfig"
+        MANIFEST_PATH = "${WORKSPACE}/kubeconfig"
+
     }
 
     stages {
