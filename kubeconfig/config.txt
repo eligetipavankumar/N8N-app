@@ -1,0 +1,59 @@
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority: C:\Users\elige\.minikube\ca.crt
+    extensions:
+    - extension:
+        last-update: Mon, 01 Sep 2025 15:25:48 IST
+        provider: minikube.sigs.k8s.io
+        version: v1.36.0
+      name: cluster_info
+    server: https://127.0.0.1:49157
+  name: minikube
+- cluster:
+    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURCVENDQWUyZ0F3SUJBZ0lJYkszT1NubXJCb3d3RFFZSktvWklodmNOQVFFTEJRQXdGVEVUTUJFR0ExVUUKQXhNS2EzVmlaWEp1WlhSbGN6QWVGdzB5TlRBNE1UTXhNekF4TkRkYUZ3MHpOVEE0TVRFeE16QTJORGRhTUJVeApFekFSQmdOVkJBTVRDbXQxWW1WeWJtVjBaWE13Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLCkFvSUJBUUMzT1BGRUN4NDZaY1crZDRrd2ZNR0xXRmFTV3laeldGWmRTNW5mcmRydWJLdU9iY29wWXJ4MllwcWgKSEtRMWk3VnlPa0VnaWZiWUpNenYzcE40UDVjWFpuMGMvd1BJMkR4UWMzNTJxMkpoNk9HVCtxSVp4L1NQWHQ1Mgp4L015WmVtQ1lqQmdxUWl1Zi9idmlBMTBHT0ZpKzh6S1dnQ2FIdEkxUHQ4Wnp6ZHA3ekpiTFd6b21td2dEeCtXCkxBZUZTR25RTUlIYTN4UUlSclAya2lXOXBlczNla0x6OXVYWURMWmF5ZjBzYVVJTkMvRjR4ZytuT1NDcGxyaUcKa2J4c1o4YWh1b1c0dlE4eEh2VzU4V1VFbkZoMW9SRnVaZElpOURpVE14a3IrR2hYNkVwa3FPUlN2QWR5bS9kZgo4WC9NWVVwQUxKYTJ3NEUzNlYydTU4YXRWeDNqQWdNQkFBR2pXVEJYTUE0R0ExVWREd0VCL3dRRUF3SUNwREFQCkJnTlZIUk1CQWY4RUJUQURBUUgvTUIwR0ExVWREZ1FXQkJSZ0ZXeXRGTTljenRack9KNnUxbmdEUjFaMS9qQVYKQmdOVkhSRUVEakFNZ2dwcmRXSmxjbTVsZEdWek1BMEdDU3FHU0liM0RRRUJDd1VBQTRJQkFRQ04za01PRnhqVwpaSEVKR1Q1NWNOWWc2QnhVdnQ2a0JuaGlBazRKWUwrQVJwOUxEWm5vVnpWdndQK1huS2dOb0FUWjY3WGkxbEF1CmNkeURKUy9qY1YrUkZ5S2tMekZwOXc3ZXdEOGoreFhFeVBNWGZhbHNhVWE5VjRHaC9OZVlSUjFnd0tLYWM2NkUKTVRDTzVVQk9IdkQxcWM1NHhPYTUxQlFQN3NpRnU2ZGxuTlVyN24ya2xlMElzNWY0UVRoNmlrY0dBK1YzY0FTdApnWVJIVHRLSElSYTVrblBIN0Y2VlV6dk83akhLSFE3ckVid05kWVdod093YjZINEVpellLTTJXVVhyT2w2VjhRCm5OV29FR0cwVlRpYzFhTG1NSmhVZ3NlQzFyQ1RIakh0bVZTWTFGdStFSUNrT2dtM2JqQWxkcHlveHNxL2dtcHEKWHZqbEc2NW5OQzE0Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+    server: https://AA39BDF33733DB777CF537B0AC7D6802.gr7.eu-west-3.eks.amazonaws.com
+  name: my-eks-cluster.eu-west-3.eksctl.io
+contexts:
+- context:
+    cluster: my-eks-cluster.eu-west-3.eksctl.io
+    user: iam-root-account@my-eks-cluster.eu-west-3.eksctl.io
+  name: iam-root-account@my-eks-cluster.eu-west-3.eksctl.io
+- context:
+    cluster: minikube
+    extensions:
+    - extension:
+        last-update: Mon, 01 Sep 2025 15:25:48 IST
+        provider: minikube.sigs.k8s.io
+        version: v1.36.0
+      name: context_info
+    namespace: default
+    user: minikube
+  name: minikube
+current-context: minikube
+kind: Config
+preferences: {}
+users:
+- name: iam-root-account@my-eks-cluster.eu-west-3.eksctl.io
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1beta1
+      args:
+      - eks
+      - get-token
+      - --output
+      - json
+      - --cluster-name
+      - my-eks-cluster
+      - --region
+      - eu-west-3
+      command: aws
+      env:
+      - name: AWS_STS_REGIONAL_ENDPOINTS
+        value: regional
+      interactiveMode: IfAvailable
+      provideClusterInfo: false
+- name: minikube
+  user:
+    client-certificate: C:\Users\elige\.minikube\profiles\minikube\client.crt
+    client-key: C:\Users\elige\.minikube\profiles\minikube\client.key
