@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: n8n
-          image: eligetipavankumar/n8n:25
+          image: eligetipavankumar/n8n:24
           ports:
             - containerPort: 5678
           env:
@@ -50,7 +50,9 @@ spec:
               value: "https://api.github.com/user"
             - name: N8N_AUTH_OAUTH2_SCOPE
               value: "read:user,user:email"
-						- name: N8N_AUTH_FORCE_NEW
-						  value: "true"
+            - name: N8N_AUTH_FORCE_NEW
+              value: "true"
+
+            # Cookie setting
             - name: N8N_SECURE_COOKIE
               value: "false"
