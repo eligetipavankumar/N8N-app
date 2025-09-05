@@ -39,9 +39,9 @@ spec:
             - name: N8N_AUTH_OAUTH2_PROVIDER
               value: "github"
             - name: N8N_AUTH_OAUTH2_CLIENT_ID
-              value: "<your-client-id>"
+              value: "Ov23liKdpgS5AjPctJIV"
             - name: N8N_AUTH_OAUTH2_CLIENT_SECRET
-              value: "<your-client-secret>"
+              value: "2c85f109ba0c4f0a22053d8d5836d2f531148dd8"
             - name: N8N_AUTH_OAUTH2_AUTH_URL
               value: "https://github.com/login/oauth/authorize"
             - name: N8N_AUTH_OAUTH2_TOKEN_URL
