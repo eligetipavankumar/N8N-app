@@ -50,3 +50,7 @@ spec:
               value: "https://api.github.com/user"
             - name: N8N_AUTH_OAUTH2_SCOPE
               value: "read:user,user:email"
+
+            # Disable secure cookie for local testing
+            - name: N8N_SECURE_COOKIE
+              value: "false"
